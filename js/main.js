@@ -22,8 +22,6 @@ function contentFromTask() {
         return task
     }
     return null
-
-
 }
 
 
@@ -71,7 +69,6 @@ function getTaskService() {
             console.log(err);
         });
 }
-
 getTaskService()
 
 
@@ -82,7 +79,6 @@ function addTask() {
     if (content !== null) {
         service.addTaskService(content)
             .then(function(result) {
-                taskList.addTask(result.data);
                 createTable(result.data)
                 getTaskService()
 
@@ -91,22 +87,24 @@ function addTask() {
                 console.log(err)
             })
     }
-
 }
 
-// Chuyển Task
+
+// change Task
 function changeTask(id) {
     alert("Change Status Success!")
     service.updateTaskService(id)
         .then(function(result) {
-            taskList.updateTask(result.data.id)
-            createTable(result.data.task);
-            console.log(result.data.status)
+            if (result.data.id == id) {
+                result.data.status = !result.data.status
+                console.log(result.data)
+                createTable(result.data.task)
+                getTaskService()
+            }
         })
         .catch(function(err) {
             console.log(err)
         })
-    getTaskService()
 }
 
 // Xóa Task
@@ -122,19 +120,4 @@ function deleteTask(id) {
             console.log(err);
         });
 
-}
-
-
-// Set local
-function setLocalStorage() {
-    var arrString = JSON.stringify(taskList.arr)
-    localStorage.setItem("TASK", arrString)
-}
-
-// Get local
-function getLocalStorage() {
-    if (JSON.parse(localStorage.getItem("TASK"))) {
-        taskList.arr = JSON.parse(localStorage.getItem("TASK"));
-        createTable(taskList.arr);
-    }
 }
